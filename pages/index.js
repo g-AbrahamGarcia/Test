@@ -1,4 +1,44 @@
-const Loginremasterizado = () => {
+
+import { useState } from "react";
+
+export default function Login(){
+
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    // Aquí puedes realizar la validación de los campos, por ejemplo:
+    if (!username || !password) {
+      setError('Por favor, completa todos los campos.');
+      return;
+    }
+
+    // Aquí puedes enviar los datos de inicio de sesión al servidor para la autenticación
+    try {
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      if (response.ok) {
+        // Si la respuesta es exitosa, redirecciona a otra página
+        window.location.href = '/dashboard';
+      } else {
+        // Si la respuesta no es exitosa, muestra un mensaje de error
+        setError('Credenciales incorrectas. Por favor, intenta de nuevo.');
+      }
+    } catch (error) {
+      console.error('Error al iniciar sesión:', error);
+      setError('Ocurrió un error al intentar iniciar sesión. Por favor, intenta de nuevo más tarde.');
+    }
+  };
+
   return (
     <div className="w-full relative bg-white overflow-hidden flex flex-row items-start justify-start py-0 pr-[31px] pl-0 box-border gap-[132px] tracking-[normal] text-center text-[80px] text-black font-poppins mq750:gap-[132px_66px] mq450:gap-[132px_33px] mq1125:flex-wrap mq1125:p-5 mq1125:box-border">
       <div className="w-[597px] flex flex-row items-start justify-start relative min-w-[597px] max-w-full mq750:min-w-full mq1125:flex-1">
@@ -37,7 +77,9 @@ const Loginremasterizado = () => {
                   </span>
                 </h1>
                 <div className="self-stretch flex flex-row items-start justify-start py-0 px-0.5 box-border max-w-full">
-                  <form className="m-0 flex-1 flex flex-col items-end justify-start gap-[42.8px] max-w-full mq750:gap-[21px_42.8px]">
+                  <form className="m-0 flex-1 flex flex-col items-end justify-start gap-[42.8px] max-w-full mq750:gap-[21px_42.8px]"
+                        onSubmit={handleSubmit}
+                  >
                     <div className="self-stretch h-[188.2px] flex flex-col items-start justify-start pt-0 px-0 pb-[83px] box-border max-w-full">
                       <div className="self-stretch overflow-hidden flex flex-col items-start justify-start py-[22.6px] px-0 box-border gap-[4px] max-w-full shrink-0 z-[1]">
                         <div className="self-stretch relative text-sm leading-[20px] font-medium font-poppins text-black text-left">
@@ -48,6 +90,9 @@ const Loginremasterizado = () => {
                             className="w-full [border:none] [outline:none] font-poppins text-sm bg-[transparent] h-5 flex-1 relative leading-[20px] text-gray-100 text-left inline-block overflow-hidden text-ellipsis whitespace-nowrap min-w-[250px] max-w-full p-0"
                             placeholder="Ingresa tu matrícula"
                             type="text"
+                            name="username"
+                            id="username"
+                            onChange={(e) => setUsername(e.target.value)}
                           />
                         </div>
                       </div>
@@ -59,7 +104,10 @@ const Loginremasterizado = () => {
                           <input
                             className="w-full [border:none] [outline:none] font-poppins text-sm bg-[transparent] h-5 flex-1 relative leading-[20px] text-gray-100 text-left inline-block overflow-hidden text-ellipsis whitespace-nowrap min-w-[250px] max-w-full p-0"
                             placeholder="Ingresa tu contraseña"
-                            type="text"
+                            type="password"
+                            name="password"
+                            id="password"
+                            onChange={(e) => setPassword(e.target.value)}
                           />
                         </div>
                         <img
@@ -99,5 +147,3 @@ const Loginremasterizado = () => {
     </div>
   );
 };
-
-export default Loginremasterizado;
